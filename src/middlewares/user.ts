@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import { ValidUser } from '../validation/user'
+import { ValidUser, UpdateValidUser } from '../validation/user'
 import { validate } from 'class-validator';
 import { isDatabaseConnected } from '../config/sqlConnection';
 
@@ -23,5 +23,20 @@ export const checkDatabaseConnection = (req: Request, res: Response, next: NextF
     } else {
         res.status(500).send("Error connecting to database");
     }
-
 };
+
+export const updateUserValidate = (req: Request, res: Response, next: NextFunction) => {
+    const { user_name, user_lastName, user_phone } = req.body;
+    if (!user_name && !user_lastName && !user_phone) {
+        res.status(400).send("No data to update");
+    } else {
+        const validUserUpdate = new UpdateValidUser(user_name, user_lastName, user_phone);
+        validate(validUserUpdate, { validationError: { target: false } }).then(errors => {
+            if (errors.length > 0) {
+                res.status(400).send(errors);
+            } else {
+                next();
+            }
+        });
+    }
+}

@@ -5,3 +5,9 @@ export type NewUser = {
     user_email: string,
     user_phone: string
 };
+
+export type UpdateUser = {
+    user_name?: string,
+    user_lastName?: string,
+    user_phone?: string
+};

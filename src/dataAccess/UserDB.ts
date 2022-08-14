@@ -1,6 +1,7 @@
 import { NewUser } from "../models/user";
 import UserDBInterface from "../models/UserDBInterface";
 import sqlConnection from "../config/sqlConnection";
+import { UpdateValidUser } from "../validation/user";
 
 
 //singleton DB
@@ -43,6 +44,32 @@ export default class UserDB implements UserDBInterface {
                     resolve(results);
                 }
             );
+        });
+    }
+
+    public updateUserById(userId: string, updateUser: UpdateValidUser): Promise<any> {
+        let queryString = "UPDATE users SET ";
+        const queryValues: string[] = [];
+
+        Object.entries(updateUser).forEach(([key, value]) => {
+            if(value !== undefined) {
+                queryString += `${key} = ?, `;
+                queryValues.push(value);
+            }
+        });
+
+        queryString = queryString.slice(0, -2);
+
+        queryString += ` WHERE user_id = ?`;
+        queryValues.push(userId);
+
+        return new Promise((resolve, reject) => {
+            sqlConnection.query(queryString, queryValues, (error, results, fields) => {
+                if (error) {
+                    reject(error);
+                }
+                resolve(results);
+            });
         });
     }
 }

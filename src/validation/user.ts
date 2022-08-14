@@ -2,9 +2,10 @@ import {
     Length,
     IsEmail,
     IsPhoneNumber,
-    IsDefined
+    IsDefined,
+    IsOptional
   } from 'class-validator';
-  import { NewUser } from '../models/user';
+  import { NewUser, UpdateUser } from '../models/user';
 
   export class ValidUser implements NewUser {
     @IsDefined()
@@ -32,6 +33,26 @@ import {
         this.user_name = user_name;
         this.user_lastName = user_lastName;
         this.user_email = user_email;
+        this.user_phone = user_phone;
+    }
+  }
+
+  export class UpdateValidUser implements UpdateUser {
+    @IsOptional()
+    @Length(3, 20)
+    user_name?: string;
+
+    @IsOptional()
+    @Length(3, 20)
+    user_lastName?: string;
+
+    @IsOptional()
+    @IsPhoneNumber()
+    user_phone?: string;
+
+    constructor(user_name: string, user_lastName: string, user_phone: string) {
+        this.user_name = user_name;
+        this.user_lastName = user_lastName;
         this.user_phone = user_phone;
     }
   }

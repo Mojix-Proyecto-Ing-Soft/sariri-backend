@@ -11,3 +11,17 @@ export const createUser = (req: Request, res: Response) => {
         res.status(500).send("Error creating user");
     });
 };
+
+export const getUserInfo = (req: Request, res: Response) => {
+    const userId = req.params.id;
+    const userDB = UserDB.getInstance();
+    userDB.getUserById(userId).then((result) => {
+        if (result.length > 0) {
+            res.status(200).send(result);
+        } else {
+            res.status(404).send("User not found");
+        }
+    }).catch((error) => {
+        res.status(500).send("Error getting user");
+    });
+};

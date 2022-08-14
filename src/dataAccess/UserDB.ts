@@ -30,4 +30,19 @@ export default class UserDB implements UserDBInterface {
             );
         });
     }
+
+    public getUserById(userId: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+            sqlConnection.query(
+                "SELECT * FROM users WHERE user_id = ?",
+                [userId],
+                (error, results, fields) => {
+                    if (error) {
+                        reject(error);
+                    }
+                    resolve(results);
+                }
+            );
+        });
+    }
 }

@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import { ValidUser } from '../validation/user'
 import { validate } from 'class-validator';
+import { isDatabaseConnected } from '../config/sqlConnection';
 
 
 export const newUserValidate = (req: Request, res: Response, next: NextFunction) => {
@@ -14,4 +15,13 @@ export const newUserValidate = (req: Request, res: Response, next: NextFunction)
             next();
         }
     });
+};
+
+export const checkDatabaseConnection = (req: Request, res: Response, next: NextFunction) => {
+    if (isDatabaseConnected) {
+        next();
+    } else {
+        res.status(500).send("Error connecting to database");
+    }
+
 };

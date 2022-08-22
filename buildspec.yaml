@@ -1,0 +1,16 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - npm install
+  build:
+    commands:
+      - echo "Hello World"
+      - npm run build
+      - ls
+
+artifacts:
+  files:
+    - '**/*'
+  base-directory: build

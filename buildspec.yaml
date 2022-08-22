@@ -12,5 +12,8 @@ phases:
 
 artifacts:
   files:
-    - '**/*'
-  base-directory: build
+    - 'build/**/*'
+    - 'package.json'
+    - 'package-lock.json'
+    - 'Procfile'
+    - 'node_modules/**/*'

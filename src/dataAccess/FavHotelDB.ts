@@ -106,4 +106,20 @@ export default class FavHotelDB implements FavHotelDBInterface {
             });
         });
     }
+
+    public getFavHotelsbyUser(userID: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+            sqlConnection.query(
+                "SELECT h.location_id, h.hotel_name, h.hotel_lat, h.hotel_lng, h.photo_url, h.hotel_price FROM fav_hotels fh INNER JOIN hotels h ON fh.location_id = h.location_id WHERE fh.user_id = ?",
+                [userID],
+                (error, results, fields) => {
+                    if (error) {
+                        reject(error);
+                    }
+                    resolve(results);
+                }
+            );
+        });
+    }
+
 }

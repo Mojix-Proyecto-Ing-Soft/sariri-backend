@@ -15,3 +15,13 @@ export const toogleFav = (req: Request, res: Response) => {
         res.status(500).send(error);
     });
 };
+
+export const getFavHotels = (req: Request, res: Response) => {
+    const userID = req.params.id;
+
+    favHotelDB.getFavHotelsbyUser(userID).then((result) => {
+        res.status(200).send(result);
+    }).catch((error) => {
+        res.status(500).send(error);
+    });
+}

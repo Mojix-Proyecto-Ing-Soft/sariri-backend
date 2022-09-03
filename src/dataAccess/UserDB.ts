@@ -76,7 +76,6 @@ export default class UserDB implements UserDBInterface {
     public checkIfUserExists(userID: String): Promise<any> {
         return new Promise((resolve, reject) => {
             sqlConnection.query("SELECT * FROM users WHERE user_id = ?", [userID], (error, results, fields) => {
-                console.log(results);
                 if(error) reject(error)
                 resolve(results)
             });

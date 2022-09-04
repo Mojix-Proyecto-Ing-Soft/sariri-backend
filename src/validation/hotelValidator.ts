@@ -6,7 +6,7 @@ import {
     IsUrl,
     IsNumber
   } from 'class-validator';
-import { Hotel } from '../models/hotel';
+import { Hotel } from '../models/hotelModels';
 
   export class ValidHotel implements Hotel {
     @IsDefined()

@@ -1,7 +1,7 @@
 import express from 'express'
-import { checkDatabaseConnection } from '../../middlewares/user'
-import { toogleFav, getFavHotels } from '../../controller/fav_hotel';
-import { userExistInDB, hotelFormatValidate } from '../../middlewares/fav_hotel';
+import { checkDatabaseConnection } from '../../middlewares/userMiddlewares'
+import { toogleFav, getFavHotels } from '../../controller/hotelFavController';
+import { userExistInDB, hotelFormatValidate } from '../../middlewares/hotelFavMiddleware';
 
 const hotelFavRouter = express.Router();
 

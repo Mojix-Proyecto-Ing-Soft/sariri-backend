@@ -1,6 +1,6 @@
 import FavHotelDBInterface from '../models/FavHotelDBInterface'
 import sqlConnection from '../config/sqlConnection';
-import { Hotel } from '../models/hotel';
+import { Hotel } from '../models/hotelModels';
 
 
 //singleton DB

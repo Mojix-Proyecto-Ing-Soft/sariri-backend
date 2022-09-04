@@ -1,7 +1,7 @@
-import { NewUser } from "../models/user";
+import { NewUser } from "../models/userModels";
 import UserDBInterface from "../models/UserDBInterface";
 import sqlConnection from "../config/sqlConnection";
-import { UpdateValidUser } from "../validation/user";
+import { UpdateValidUser } from "../validation/userValidator";
 
 
 //singleton DB

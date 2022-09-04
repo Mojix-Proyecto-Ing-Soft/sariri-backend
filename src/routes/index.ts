@@ -1,6 +1,6 @@
 import expreess from 'express'
-import hotelFavRouter from './api/fav_hotel';
-import userRouter from './api/user'
+import hotelFavRouter from './api/hotelFavRouter';
+import userRouter from './api/userRouter'
 
 
 const router = expreess.Router();

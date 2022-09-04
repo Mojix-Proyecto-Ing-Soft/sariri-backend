@@ -1,4 +1,4 @@
-import { Hotel } from "./hotel"
+import { Hotel } from "./hotelModels"
 
 export default interface FavHotelDBInterface {
     checkHotelExist(location_id: string): Promise<any>; // verify if the hotel is already in the DB

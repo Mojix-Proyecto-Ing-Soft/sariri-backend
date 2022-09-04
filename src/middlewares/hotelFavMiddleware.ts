@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import UserDB from '../dataAccess/UserDB';
-import { ValidHotel } from '../validation/fav_hotel';
+import { ValidHotel } from '../validation/hotelValidator';
 import { validate } from 'class-validator';
 
 const userDB = UserDB.getInstance();

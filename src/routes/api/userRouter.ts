@@ -1,6 +1,6 @@
 import express from 'express'
-import { checkDatabaseConnection, newUserValidate, updateUserValidate } from '../../middlewares/user'
-import { createUser, getUserInfo, updateUserInfo, userExists } from '../../controller/user';
+import { checkDatabaseConnection, newUserValidate, updateUserValidate } from '../../middlewares/userMiddlewares'
+import { createUser, getUserInfo, updateUserInfo, userExists } from '../../controller/userController';
 
 const userRouter = express.Router();
 

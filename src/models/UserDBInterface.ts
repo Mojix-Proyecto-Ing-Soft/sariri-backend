@@ -1,4 +1,4 @@
-import { NewUser } from './user'
+import { NewUser } from './userModels'
 
 export default interface UserDBInterface {
     insertUserInDB(newUser: NewUser): Promise<any>

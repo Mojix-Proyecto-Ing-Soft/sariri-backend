@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import { ValidUser, UpdateValidUser } from '../validation/user'
+import { ValidUser, UpdateValidUser } from '../validation/userValidator'
 import { validate } from 'class-validator';
 import { isDatabaseConnected } from '../config/sqlConnection';
 

@@ -90,12 +90,12 @@ export default class FavHotelDB implements FavHotelDBInterface {
                 }
                 // agregamos el hotel a favoritos
                 this.addFavHotel(userId, location_id).then((result) => {
-                    resolve("Hotel added to fav");
+                    resolve({ message: "Hotel added to favs", isFavorite: true });
                 }).catch((error) => {
                     if (error.code === 'ER_DUP_ENTRY') {
                         // hotel ya es favorito, lo quitamos
                         this.removeFavHotel(userId, location_id).then((result) => {
-                            resolve("Hotel removed from fav");
+                            resolve({ message: "Hotel removed from favs", isFavorite: false });
                         }).catch((error) => {
                             reject(error);
                         });

@@ -1,7 +1,7 @@
-import { NewUser } from "../models/user";
+import { NewUser } from "../models/userModels";
 import UserDBInterface from "../models/UserDBInterface";
 import sqlConnection from "../config/sqlConnection";
-import { UpdateValidUser } from "../validation/user";
+import { UpdateValidUser } from "../validation/userValidator";
 
 
 //singleton DB
@@ -76,7 +76,6 @@ export default class UserDB implements UserDBInterface {
     public checkIfUserExists(userID: String): Promise<any> {
         return new Promise((resolve, reject) => {
             sqlConnection.query("SELECT * FROM users WHERE user_id = ?", [userID], (error, results, fields) => {
-                console.log(results);
                 if(error) reject(error)
                 resolve(results)
             });

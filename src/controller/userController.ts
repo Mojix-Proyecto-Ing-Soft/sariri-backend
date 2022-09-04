@@ -1,13 +1,12 @@
 import { Request, Response } from "express";
-import { NewUser } from "../models/user";
-import UserDB from "../dataAccess/UserDB";
-import { UpdateValidUser } from "../validation/user";
+import { NewUser } from "../models/userModels";
+import { UpdateValidUser } from "../validation/userValidator";
+import UserService from "../services/UserService";
 
-const userDB = UserDB.getInstance();
 
 export const createUser = (req: Request, res: Response) => {
     const newUser: NewUser = req.body;
-    userDB.insertUserInDB(newUser).then((result) => {
+    UserService.createUser(newUser).then((result) => {
         res.status(201).send("User created");
     }).catch((error) => {
         res.status(500).send("Error creating user");
@@ -16,7 +15,7 @@ export const createUser = (req: Request, res: Response) => {
 
 export const getUserInfo = (req: Request, res: Response) => {
     const userId = req.params.id;
-    userDB.getUserById(userId).then((result) => {
+    UserService.getUserInfo(userId).then((result) => {
         if (result.length > 0) {
             res.status(200).send(result);
         } else {
@@ -30,7 +29,7 @@ export const getUserInfo = (req: Request, res: Response) => {
 export const updateUserInfo = (req: Request, res: Response) => {
     const userId = req.params.id;
     const updateUser: UpdateValidUser = new UpdateValidUser(req.body.user_name, req.body.user_lastName, req.body.user_phone);
-    userDB.updateUserById(userId, updateUser).then((result) => {
+    UserService.updateUserInfo(userId, updateUser).then((result) => {
         console.log(result);
         if (result.affectedRows > 0) {
             if (result.changedRows > 0) {
@@ -48,7 +47,7 @@ export const updateUserInfo = (req: Request, res: Response) => {
 
 export const userExists = (req: Request, res: Response) => {
     const userId = req.params.id;
-    userDB.checkIfUserExists(userId).then((result) => {
+    UserService.userExists(userId).then((result) => {
         if((result as Array<any>).length > 0) res.status(200).send({ message:"User exists", userExists: true })
         else res.status(200).send({ message:"User doesn't exists", userExists: false })
     }).catch((error) => {

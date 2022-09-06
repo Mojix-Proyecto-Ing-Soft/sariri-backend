@@ -4,5 +4,7 @@ export type Hotel = {
     hotel_lat: string,
     hotel_lng: string,
     photo_url: string,
-    hotel_price: number
+    hotel_price: number,
+    hotel_rating: number,
+    hotel_address: string
 };

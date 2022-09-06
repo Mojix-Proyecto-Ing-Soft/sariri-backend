@@ -16,8 +16,8 @@ export const userExistInDB = (req: Request, res: Response, next: NextFunction) =
 }
 
 export const hotelFormatValidate = (req: Request, res: Response, next: NextFunction) => {
-    const { location_id, hotel_name, hotel_lat, hotel_lng, photo_url, hotel_price } = req.body;
-    const validHotel = new ValidHotel(location_id, hotel_name, hotel_lat, hotel_lng, photo_url, hotel_price);
+    const { location_id, hotel_name, hotel_lat, hotel_lng, photo_url, hotel_price, hotel_rating, hotel_address } = req.body;
+    const validHotel = new ValidHotel(location_id, hotel_name, hotel_lat, hotel_lng, photo_url, hotel_price, hotel_rating, hotel_address);
 
     validate(validHotel, { validationError: { target: false } }).then(errors => {
         if (errors.length > 0) {

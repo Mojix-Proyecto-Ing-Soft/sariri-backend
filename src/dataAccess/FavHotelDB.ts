@@ -35,8 +35,8 @@ export default class FavHotelDB implements FavHotelDBInterface {
     public addHotelInDB(newHotel: Hotel): Promise<any> {
         return new Promise((resolve, reject) => {
             sqlConnection.query(
-                "INSERT INTO hotels (location_id, hotel_name, hotel_lat, hotel_lng, photo_url, hotel_price) VALUES (?, ?, ?, ?, ?, ?)",
-                [newHotel.location_id, newHotel.hotel_name, newHotel.hotel_lat, newHotel.hotel_lng, newHotel.photo_url, newHotel.hotel_price],
+                "INSERT INTO hotels (location_id, hotel_name, hotel_lat, hotel_lng, photo_url, hotel_price, hotel_rating, hotel_address) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                [newHotel.location_id, newHotel.hotel_name, newHotel.hotel_lat, newHotel.hotel_lng, newHotel.photo_url, newHotel.hotel_price, newHotel.hotel_rating, newHotel.hotel_address],
                 (error, results, fields) => {
                     if (error) {
                         reject(error);
@@ -110,7 +110,7 @@ export default class FavHotelDB implements FavHotelDBInterface {
     public getFavHotelsbyUser(userID: string): Promise<any> {
         return new Promise((resolve, reject) => {
             sqlConnection.query(
-                "SELECT h.location_id, h.hotel_name, h.hotel_lat, h.hotel_lng, h.photo_url, h.hotel_price FROM fav_hotels fh INNER JOIN hotels h ON fh.location_id = h.location_id WHERE fh.user_id = ?",
+                "SELECT h.location_id, h.hotel_name, h.hotel_lat, h.hotel_lng, h.photo_url, h.hotel_price, h.hotel_rating, h.hotel_address FROM hotels h INNER JOIN fav_hotels f ON h.location_id = f.location_id WHERE f.user_id = ?",
                 [userID],
                 (error, results, fields) => {
                     if (error) {

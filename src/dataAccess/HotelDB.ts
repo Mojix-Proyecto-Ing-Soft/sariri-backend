@@ -4,16 +4,16 @@ import { Hotel } from '../models/hotelModels';
 
 
 //singleton DB
-export default class FavHotelDB implements FavHotelDBInterface {
-    private static instance: FavHotelDB;
+export default class HotelDB implements FavHotelDBInterface {
+    private static instance: HotelDB;
 
     private constructor() {}
 
-    public static getInstance(): FavHotelDB {
-        if (!FavHotelDB.instance) {
-            FavHotelDB.instance = new FavHotelDB();
+    public static getInstance(): HotelDB {
+        if (!HotelDB.instance) {
+            HotelDB.instance = new HotelDB();
         }
-        return FavHotelDB.instance;
+        return HotelDB.instance;
     }
 
     public checkHotelExist(location_id: string): Promise<any> {
@@ -112,6 +112,20 @@ export default class FavHotelDB implements FavHotelDBInterface {
             sqlConnection.query(
                 "SELECT h.location_id, h.hotel_name, h.hotel_lat, h.hotel_lng, h.photo_url, h.hotel_price, h.hotel_rating, h.hotel_address FROM hotels h INNER JOIN fav_hotels f ON h.location_id = f.location_id WHERE f.user_id = ?",
                 [userID],
+                (error, results, fields) => {
+                    if (error) {
+                        reject(error);
+                    }
+                    resolve(results);
+                }
+            );
+        });
+    }
+
+    public getHotels(): Promise<any> {
+        return new Promise((resolve, reject) => {
+            sqlConnection.query(
+                "SELECT * FROM hotels",
                 (error, results, fields) => {
                     if (error) {
                         reject(error);

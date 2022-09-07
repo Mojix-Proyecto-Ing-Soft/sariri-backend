@@ -1,10 +1,10 @@
 import { ValidHotel } from "../validation/hotelValidator";
-import FavHotelDB from "../dataAccess/FavHotelDB";
+import HotelDB from "../dataAccess/HotelDB";
 
 
 export default class HotelFavService {
 
-    private static favHotelDB: FavHotelDB = FavHotelDB.getInstance()
+    private static favHotelDB: HotelDB = HotelDB.getInstance()
 
     public static hotelExists(location_id: string): Promise<any> {
         // logica de negocio

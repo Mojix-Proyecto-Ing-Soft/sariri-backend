@@ -1,6 +1,6 @@
 import FavHotelDBInterface from '../models/FavHotelDBInterface'
 import sqlConnection from '../config/sqlConnection';
-import { Hotel } from '../models/hotelModels';
+import { Award, Hotel, Service } from '../models/hotelModels';
 
 
 //singleton DB
@@ -35,8 +35,8 @@ export default class HotelDB implements FavHotelDBInterface {
     public addHotelInDB(newHotel: Hotel): Promise<any> {
         return new Promise((resolve, reject) => {
             sqlConnection.query(
-                "INSERT INTO hotels (location_id, hotel_name, hotel_lat, hotel_lng, photo_url, hotel_price, hotel_rating, hotel_address) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                [newHotel.location_id, newHotel.hotel_name, newHotel.hotel_lat, newHotel.hotel_lng, newHotel.photo_url, newHotel.hotel_price, newHotel.hotel_rating, newHotel.hotel_address],
+                "INSERT INTO hotels (location_id, hotel_name, hotel_lat, hotel_lng, photo_url_large, photo_url_original, hotel_price, hotel_rating, hotel_address, num_reviews, hotel_ranking, contact_number, price_level, awards, services) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                [newHotel.location_id, newHotel.hotel_name, newHotel.hotel_lat, newHotel.hotel_lng, newHotel.photo_url_large, newHotel.photo_url_original, newHotel.hotel_price, newHotel.hotel_rating, newHotel.hotel_address, newHotel.num_reviews, newHotel.hotel_ranking, newHotel.contact_number, newHotel.price_level, newHotel.awards, newHotel.services],
                 (error, results, fields) => {
                     if (error) {
                         reject(error);
@@ -122,6 +122,37 @@ export default class HotelDB implements FavHotelDBInterface {
         });
     }
 
+    public getHotelAwards(location_id: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+            sqlConnection.query(
+                "SELECT a.award_id, a.display_name, a.badge_url FROM hotel_awards hw INNER JOIN awards a ON hw.award_id = a.award_id WHERE hw.location_id = ?",
+                [location_id],
+                (error, results, fields) => {
+                    if (error) {
+                        reject(error);
+                    }
+                    resolve(results);
+                }
+            );
+        });
+    }
+
+    public getHotelServices(location_id: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+            sqlConnection.query(
+                "SELECT * FROM hotel_services hs INNER JOIN services s ON hs.service_id = s.service_id WHERE hs.location_id = ?",
+                [location_id],
+                (error, results, fields) => {
+                    if (error) {
+                        reject(error);
+                    }
+                    resolve(results);
+                }
+            );
+        });
+    }
+
+
     public getHotels(): Promise<any> {
         return new Promise((resolve, reject) => {
             sqlConnection.query(
@@ -130,7 +161,25 @@ export default class HotelDB implements FavHotelDBInterface {
                     if (error) {
                         reject(error);
                     }
-                    resolve(results);
+                    const hotelsResult = results as Array<Hotel>;
+                    const hotels: Hotel[] = [];
+                    hotelsResult.forEach((hotel) => {
+                        const { location_id } = hotel;
+                        this.getHotelAwards(location_id).then((awards: Award[]) => {
+                            hotel.awards = awards;
+                            this.getHotelServices(location_id).then((services: Service[]) => {
+                                hotel.services = services;
+                                hotels.push(hotel);
+                                if (hotels.length === hotelsResult.length) {
+                                    console.log(hotels);
+                                    resolve(hotels);
+                                }
+                            });
+                        }).catch((error) => {
+                            reject(error);
+                        });
+                    });
+                    
                 }
             );
         });

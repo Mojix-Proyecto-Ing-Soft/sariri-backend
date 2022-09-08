@@ -26,9 +26,9 @@ export default class HotelFavService {
         return this.favHotelDB.removeFavHotel(userId, location_id);
     }
 
-    public static toogleHotelFav(userId: string, hotel: ValidHotel): Promise<any> {
+    public static toogleHotelFav(userId: string, location_id: string): Promise<any> {
         // logica de negocio
-        return this.favHotelDB.toogleHotelFav(userId, hotel);
+        return this.favHotelDB.toogleHotelFav(userId, location_id);
     }
 
     public static getFavHotels(userId: string): Promise<any> {

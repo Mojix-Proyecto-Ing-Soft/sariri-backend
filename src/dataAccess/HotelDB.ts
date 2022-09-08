@@ -7,7 +7,7 @@ import { Award, Hotel, Service } from '../models/hotelModels';
 export default class HotelDB implements FavHotelDBInterface {
     private static instance: HotelDB;
 
-    private constructor() {}
+    private constructor() { }
 
     public static getInstance(): HotelDB {
         if (!HotelDB.instance) {
@@ -35,8 +35,8 @@ export default class HotelDB implements FavHotelDBInterface {
     public addHotelInDB(newHotel: Hotel): Promise<any> {
         return new Promise((resolve, reject) => {
             sqlConnection.query(
-                "INSERT INTO hotels (location_id, hotel_name, hotel_lat, hotel_lng, photo_url_large, photo_url_original, hotel_price, hotel_rating, hotel_address, num_reviews, hotel_ranking, contact_number, price_level, awards, services) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                [newHotel.location_id, newHotel.hotel_name, newHotel.hotel_lat, newHotel.hotel_lng, newHotel.photo_url_large, newHotel.photo_url_original, newHotel.hotel_price, newHotel.hotel_rating, newHotel.hotel_address, newHotel.num_reviews, newHotel.hotel_ranking, newHotel.contact_number, newHotel.price_level, newHotel.awards, newHotel.services],
+                "INSERT INTO hotels (location_id, hotel_name, hotel_lat, hotel_lng, photo_url_large, photo_url_original, hotel_price, hotel_rating, hotel_address, num_reviews, hotel_ranking, contact_number, price_level) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                [newHotel.location_id, newHotel.hotel_name, newHotel.hotel_lat, newHotel.hotel_lng, newHotel.photo_url_large, newHotel.photo_url_original, newHotel.hotel_price, newHotel.hotel_rating, newHotel.hotel_address, newHotel.num_reviews, newHotel.hotel_ranking, newHotel.contact_number, newHotel.price_level],
                 (error, results, fields) => {
                     if (error) {
                         reject(error);
@@ -77,30 +77,27 @@ export default class HotelDB implements FavHotelDBInterface {
         });
     }
 
-    public toogleHotelFav(userId: string, newHotel: Hotel): Promise<any> {
-        const { location_id } = newHotel;
+    public toogleHotelFav(userId: string, location_id: string): Promise<any> {
         return new Promise((resolve, reject) => {
             // hotel existe?
             this.checkHotelExist(location_id).then((result) => {
-                if ((result as Array<any>).length === 0) {
-                    // hotel no existe, lo agregamos
-                    this.addHotelInDB(newHotel).catch((error) => {
-                        reject(error);
+                if (result.length > 0) {
+                    // agregamos el hotel a favoritos
+                    this.addFavHotel(userId, location_id).then((result) => {
+                        resolve({ message: "Hotel added to favs", isFavorite: true });
+                    }).catch((error) => {
+                        if (error.code === 'ER_DUP_ENTRY') {
+                            // hotel ya es favorito, lo quitamos
+                            this.removeFavHotel(userId, location_id).then((result) => {
+                                resolve({ message: "Hotel removed from favs", isFavorite: false });
+                            }).catch((error) => {
+                                reject(error);
+                            });
+                        } else reject(error);
                     });
+                } else {
+                    reject({ message: "Hotel not found" });
                 }
-                // agregamos el hotel a favoritos
-                this.addFavHotel(userId, location_id).then((result) => {
-                    resolve({ message: "Hotel added to favs", isFavorite: true });
-                }).catch((error) => {
-                    if (error.code === 'ER_DUP_ENTRY') {
-                        // hotel ya es favorito, lo quitamos
-                        this.removeFavHotel(userId, location_id).then((result) => {
-                            resolve({ message: "Hotel removed from favs", isFavorite: false });
-                        }).catch((error) => {
-                            reject(error);
-                        });
-                    } else reject(error);
-                });
             }).catch((error) => {
                 reject(error);
             });
@@ -179,7 +176,7 @@ export default class HotelDB implements FavHotelDBInterface {
                             reject(error);
                         });
                     });
-                    
+
                 }
             );
         });

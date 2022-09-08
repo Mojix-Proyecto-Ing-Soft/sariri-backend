@@ -107,13 +107,18 @@ export default class HotelDB implements FavHotelDBInterface {
     public getFavHotelsbyUser(userID: string): Promise<any> {
         return new Promise((resolve, reject) => {
             sqlConnection.query(
-                "SELECT h.location_id, h.hotel_name, h.hotel_lat, h.hotel_lng, h.photo_url, h.hotel_price, h.hotel_rating, h.hotel_address FROM hotels h INNER JOIN fav_hotels f ON h.location_id = f.location_id WHERE f.user_id = ?",
+                "SELECT h.location_id, h.hotel_name, h.hotel_lat, h.hotel_lng, h.photo_url_large, h.photo_url_original, h.hotel_price, h.hotel_rating, h.hotel_address, h.num_reviews, h.hotel_ranking, h.contact_number, h.price_level FROM hotels h INNER JOIN fav_hotels f ON h.location_id = f.location_id WHERE f.user_id = ?",
                 [userID],
                 (error, results, fields) => {
                     if (error) {
                         reject(error);
                     }
-                    resolve(results);
+                    const hotelsResult = results as Array<Hotel>;
+                    this.getAwardsAndServices(hotelsResult).then((result) => {
+                        resolve(result);
+                    }).catch((error) => {
+                        reject(error);
+                    });
                 }
             );
         });
@@ -159,26 +164,34 @@ export default class HotelDB implements FavHotelDBInterface {
                         reject(error);
                     }
                     const hotelsResult = results as Array<Hotel>;
-                    const hotels: Hotel[] = [];
-                    hotelsResult.forEach((hotel) => {
-                        const { location_id } = hotel;
-                        this.getHotelAwards(location_id).then((awards: Award[]) => {
-                            hotel.awards = awards;
-                            this.getHotelServices(location_id).then((services: Service[]) => {
-                                hotel.services = services;
-                                hotels.push(hotel);
-                                if (hotels.length === hotelsResult.length) {
-                                    console.log(hotels);
-                                    resolve(hotels);
-                                }
-                            });
-                        }).catch((error) => {
-                            reject(error);
-                        });
+                    this.getAwardsAndServices(hotelsResult).then((hotels) => {
+                        resolve(hotels);
+                    }).catch((error) => {
+                        reject(error);
                     });
-
                 }
             );
+        });
+    }
+
+    private getAwardsAndServices(hotels: Hotel[]): Promise<any> {
+        const hotelsResult: Hotel[] = [];
+        return new Promise((resolve, reject) => {
+            hotels.forEach((hotel) => {
+                const { location_id } = hotel;
+                this.getHotelAwards(location_id).then((awards: Award[]) => {
+                    hotel.awards = awards;
+                    this.getHotelServices(location_id).then((services: Service[]) => {
+                        hotel.services = services;
+                        hotelsResult.push(hotel);
+                        if (hotelsResult.length === hotels.length) {
+                            resolve(hotelsResult);
+                        }
+                    });
+                }).catch((error) => {
+                    reject(error);
+                });
+            });
         });
     }
 

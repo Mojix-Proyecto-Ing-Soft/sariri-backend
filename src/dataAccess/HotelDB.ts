@@ -32,11 +32,11 @@ export default class HotelDB implements FavHotelDBInterface {
         });
     }
 
-    public addHotelInDB(newHotel: Hotel): Promise<any> {
+    public deleteHotelInDB(location_id: string): Promise<any> {
         return new Promise((resolve, reject) => {
             sqlConnection.query(
-                "INSERT INTO hotels (location_id, hotel_name, hotel_lat, hotel_lng, photo_url_large, photo_url_original, hotel_price, hotel_rating, hotel_address, num_reviews, hotel_ranking, contact_number, price_level) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                [newHotel.location_id, newHotel.hotel_name, newHotel.hotel_lat, newHotel.hotel_lng, newHotel.photo_url_large, newHotel.photo_url_original, newHotel.hotel_price, newHotel.hotel_rating, newHotel.hotel_address, newHotel.num_reviews, newHotel.hotel_ranking, newHotel.contact_number, newHotel.price_level],
+                "DELETE FROM hotels WHERE location_id = ?",
+                [location_id],
                 (error, results, fields) => {
                     if (error) {
                         reject(error);
@@ -44,6 +44,116 @@ export default class HotelDB implements FavHotelDBInterface {
                     resolve(results);
                 }
             );
+        });
+    }
+
+    public addHotelInDB(newHotel: Hotel): Promise<any> {
+        return new Promise((resolve, reject) => {
+            sqlConnection.query(
+                "INSERT INTO hotels (location_id, hotel_name, hotel_lat, hotel_lng, photo_url_large, photo_url_original, hotel_price, hotel_rating, hotel_address, num_reviews, hotel_ranking, contact_number, price_level) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                [newHotel.location_id, newHotel.hotel_name, newHotel.hotel_lat, newHotel.hotel_lng, newHotel.photo_url_large, newHotel.photo_url_original, newHotel.hotel_price, newHotel.hotel_rating, newHotel.hotel_address, newHotel.num_reviews, newHotel.hotel_ranking, newHotel.contact_number, newHotel.price_level],
+                (error, results, fields) => {
+                    if (error) {
+                        if (error.code === 'ER_DUP_ENTRY') {
+                            resolve({ message: "Hotel already exists" });
+                        } else reject({ message: "Error adding hotel" });
+                    }
+                    let awardsBindResult;
+                    let servicesBindResult
+                    if (newHotel.awards instanceof Array<string>) {
+                        awardsBindResult = this.bindHotelAwards(newHotel.location_id, newHotel.awards as Array<string>);
+                    }
+
+                    if (newHotel.services instanceof Array<string>) {
+                        servicesBindResult = this.bindHotelServices(newHotel.location_id, newHotel.services as Array<string>);
+                    }
+
+                    Promise.all([awardsBindResult, servicesBindResult]).then((result) => {
+                        resolve({ message: "Hotel added" });
+                    }).catch((error) => {
+                        this.deleteHotelInDB(newHotel.location_id);
+                        reject({ message: "Error adding hotel" });
+                    });
+                }
+            );
+        });
+    }
+
+    public awardExists(award_id: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+            sqlConnection.query(
+                "SELECT * FROM awards WHERE award_id = ?",
+                [award_id],
+                (error, results, fields) => {
+                    if (error) reject(error);
+
+                    if ((results as Array<any>).length > 0) {
+                        resolve({ awardExists: true });
+                    } else {
+                        resolve({ awardExists: false });
+                    }
+                }
+            );
+        });
+    }
+
+    public bindHotelAwards(location_id: string, awards: string[]): Promise<any> {
+        return new Promise((resolve, reject) => {
+            awards.forEach((award) => {
+                this.awardExists(award).then((result) => {
+                    if (result.awardExists) {
+                        sqlConnection.query(
+                            "INSERT INTO hotel_awards (location_id, award_id) VALUES (?, ?)",
+                            [location_id, award],
+                            (error, results, fields) => {
+                                if (error) reject(error);
+                            }
+                        );
+                    }
+                }).catch((error) => {
+                    reject(error);
+                });
+            });
+            resolve({ message: "Awards binded" });
+        });
+    }
+
+    public async serviceExists(service_id: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+            sqlConnection.query(
+                "SELECT * FROM services WHERE service_id = ?",
+                [service_id],
+                (error, results, fields) => {
+                    if (error) reject(error);
+
+                    if ((results as Array<any>).length > 0) {
+                        resolve({ serviceExists: true });
+                    } else {
+                        resolve({ serviceExists: false });
+                    }
+                }
+            );
+        });
+    }
+
+    public async bindHotelServices(location_id: string, services: string[]): Promise<any> {
+        return new Promise( async (resolve, reject) => {
+            services.forEach(async (service) => {
+                this.serviceExists(service).then((result) => {
+                    if (result.serviceExists) {
+                        sqlConnection.query(
+                            "INSERT INTO hotel_services (location_id, service_id) VALUES (?, ?)",
+                            [location_id, service],
+                            (error, results, fields) => {
+                                if (error) reject(error);
+                            }
+                        );
+                    }
+                }).catch((error) => {
+                    reject(error);
+                });
+            });
+            resolve({ message: "Services binded" });
         });
     }
 

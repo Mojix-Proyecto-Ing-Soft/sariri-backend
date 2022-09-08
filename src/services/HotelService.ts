@@ -4,14 +4,14 @@ import { Hotel } from '../models/hotelModels';
 import HotelDB from '../dataAccess/HotelDB';
 
 
-const hotelDB = HotelDB.getInstance();
-
 export default class HotelService {
+    private static hotelDB = HotelDB.getInstance();
+
     public static filterHotelsInBounds(coords: Coords): Promise<any> {
         const { bl_latitude, bl_longitude, tr_latitude, tr_longitude } = coords;
 
         return new Promise((resolve, reject) => {
-            hotelDB.getHotels().then((hotels) => {
+            this.hotelDB.getHotels().then((hotels) => {
                 const hotelsinBounds = hotels.filter((hotel: Hotel) => {
                     return geolib.isPointInPolygon(
                         { latitude: hotel.hotel_lat, longitude: hotel.hotel_lng },
@@ -28,5 +28,9 @@ export default class HotelService {
                 reject({ error: "Error while getting hotels from DB" });
             });
         });
+    }
+
+    public static addHotel(newHotel: Hotel): Promise<any> {
+        return this.hotelDB.addHotelInDB(newHotel);
     }
 }

@@ -13,3 +13,14 @@ export const getHotelsByLatLng = (req: Request, res: Response) => {
         res.status(500).send(error);
     });
 }
+
+export const addHotel = (req: Request, res: Response) => {
+    const { location_id, hotel_name, hotel_lat, hotel_lng, photo_url_large, photo_url_original, hotel_price, hotel_rating, hotel_address, num_reviews, hotel_ranking, contact_number, price_level, awards, services } = req.body;
+    const hotel = { location_id, hotel_name, hotel_lat, hotel_lng, photo_url_large, photo_url_original, hotel_price, hotel_rating, hotel_address, num_reviews, hotel_ranking, contact_number, price_level, awards, services };
+
+    HotelService.addHotel(hotel).then((result) => {
+        res.status(201).send(result);
+    }).catch((error) => {
+        res.status(500).send(error);
+    });
+}

@@ -12,8 +12,8 @@ export type Hotel = {
     hotel_ranking: string,
     contact_number: string,
     price_level: string,
-    awards: number[] | Award[],
-    services: number[] | Service[]
+    awards: string[] | Award[],
+    services: string[] | Service[]
 };
 
 export type Award = {

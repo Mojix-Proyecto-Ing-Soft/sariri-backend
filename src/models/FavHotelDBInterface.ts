@@ -5,5 +5,5 @@ export default interface FavHotelDBInterface {
     addHotelInDB(newHotel: Hotel): Promise<any> // add the hotel in the hotels table
     addFavHotel(userId: string, location_id: string): Promise<any>; // add the hotel in user fav table (fav_hotels)
     removeFavHotel(userId: string, location_id: string): Promise<any>; // remove the hotel from user fav table (fav_hotels)
-    toogleHotelFav(userId: string, newHotel: Hotel): Promise<any> // add or remove the hotel from user fav table (fav_hotels)
+    toogleHotelFav(userId: string, location_id: string): Promise<any> // add or remove the hotel from user fav table (fav_hotels)
 }

@@ -1,13 +1,12 @@
 import { Request, Response } from "express";
-import { Hotel } from "../models/hotelModels";
 import HotelFavService from "../services/HotelFavService";
 
 
 export const toogleFav = (req: Request, res: Response) => {
     const userID = req.params.id;
-    const hotel: Hotel = req.body;
+    const location_id = req.body.location_id;
 
-    HotelFavService.toogleHotelFav(userID, hotel).then((result) => {
+    HotelFavService.toogleHotelFav(userID, location_id).then((result) => {
         res.status(201).send(result);
     }).catch((error) => {
         res.status(500).send(error);

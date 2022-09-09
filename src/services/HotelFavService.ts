@@ -1,10 +1,10 @@
 import { ValidHotel } from "../validation/hotelValidator";
-import FavHotelDB from "../dataAccess/FavHotelDB";
+import HotelDB from "../dataAccess/HotelDB";
 
 
 export default class HotelFavService {
 
-    private static favHotelDB: FavHotelDB = FavHotelDB.getInstance()
+    private static favHotelDB: HotelDB = HotelDB.getInstance()
 
     public static hotelExists(location_id: string): Promise<any> {
         // logica de negocio
@@ -26,9 +26,9 @@ export default class HotelFavService {
         return this.favHotelDB.removeFavHotel(userId, location_id);
     }
 
-    public static toogleHotelFav(userId: string, hotel: ValidHotel): Promise<any> {
+    public static toogleHotelFav(userId: string, location_id: string): Promise<any> {
         // logica de negocio
-        return this.favHotelDB.toogleHotelFav(userId, hotel);
+        return this.favHotelDB.toogleHotelFav(userId, location_id);
     }
 
     public static getFavHotels(userId: string): Promise<any> {

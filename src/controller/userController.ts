@@ -30,7 +30,6 @@ export const updateUserInfo = (req: Request, res: Response) => {
     const userId = req.params.id;
     const updateUser: UpdateValidUser = new UpdateValidUser(req.body.user_name, req.body.user_lastName, req.body.user_phone);
     UserService.updateUserInfo(userId, updateUser).then((result) => {
-        console.log(result);
         if (result.affectedRows > 0) {
             if (result.changedRows > 0) {
                 res.status(200).send("User updated");

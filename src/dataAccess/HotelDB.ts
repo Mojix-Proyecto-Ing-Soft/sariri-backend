@@ -217,34 +217,27 @@ export default class HotelDB implements FavHotelDBInterface {
     public getFavHotelsbyUser(userID: string): Promise<any> {
         return new Promise((resolve, reject) => {
             sqlConnection.query(
-                "SELECT h.location_id, h.hotel_name, h.hotel_lat, h.hotel_lng, h.photo_url_large, h.photo_url_original, h.hotel_price, h.hotel_rating, h.hotel_address, h.num_reviews, h.hotel_ranking, h.contact_number, h.price_level FROM hotels h INNER JOIN fav_hotels f ON h.location_id = f.location_id WHERE f.user_id = ?",
+                "SELECT * FROM hotels h INNER JOIN fav_hotels f ON h.location_id = f.location_id LEFT JOIN hotel_services hs ON h.location_id = hs.location_id LEFT JOIN services s ON hs.service_id = s.service_id LEFT JOIN hotel_awards ha ON h.location_id = ha.location_id LEFT JOIN awards a ON ha.award_id = a.award_id LEFT JOIN fav_hotels fh ON fh.location_id = h.location_id WHERE f.user_id = ?",
                 [userID],
                 (error, results, fields) => {
                     if (error) {
                         reject(error);
                     }
-                    const hotelsResult = results as Array<Hotel>;
-                    //TODO
-                    resolve(hotelsResult);
-                    // this.getAwardsAndServices(hotelsResult).then((result) => {
-                    //     resolve(result);
-                    // }).catch((error) => {
-                    //     reject(error);
-                    // });
+                    resolve(this.bindAwardsAndServices(results as Array<any>, userID));
                 }
             );
         });
     }
 
-    public getHotels(): Promise<any> {
+    public getHotels(user_id?: string): Promise<any> {
         return new Promise((resolve, reject) => {
             sqlConnection.query(
-                "SELECT *, h.location_id FROM hotels h LEFT JOIN hotel_services hs ON h.location_id = hs.location_id LEFT JOIN services s ON hs.service_id = s.service_id LEFT JOIN hotel_awards ha ON h.location_id = ha.location_id LEFT JOIN awards a ON ha.award_id = a.award_id",
+                "SELECT *, h.location_id FROM hotels h LEFT JOIN hotel_services hs ON h.location_id = hs.location_id LEFT JOIN services s ON hs.service_id = s.service_id LEFT JOIN hotel_awards ha ON h.location_id = ha.location_id LEFT JOIN awards a ON ha.award_id = a.award_id LEFT JOIN fav_hotels fh ON fh.location_id = h.location_id",
                 (error, results, fields) => {
                     if (error) {
                         reject(error);
                     }
-                    resolve(this.bindAwardsAndServices(results as Array<any>));
+                    resolve(this.bindAwardsAndServices(results as Array<any>, user_id));
                 }
             );
         });
@@ -274,12 +267,12 @@ export default class HotelDB implements FavHotelDBInterface {
     //     return Object.values(groupedHotels);
     // }
 
-    private bindAwardsAndServices(hotels: Array<any>): Array<any> {
+    private bindAwardsAndServices(hotels: Array<any>, user_id?: string): Array<Hotel> {
         const groupedHotels = hotels.reduce((acc: any, hotel: any) => {
-            const { location_id, ...rest } = hotel;
+            const { location_id, hotel_name, hotel_lat, hotel_lng, photo_url_large, photo_url_original, hotel_price, hotel_rating, hotel_address, num_reviews, hotel_ranking, contact_number, price_level, } = hotel;
             // verificamos si el hotel ya existe en el array
             if (!acc[location_id]) {
-                acc[location_id] = { location_id, ...rest, services: [], awards: [] };
+                acc[location_id] = { location_id, hotel_name, hotel_lat, hotel_lng, photo_url_large, photo_url_original, hotel_price, hotel_rating, hotel_address, num_reviews, hotel_ranking, contact_number, price_level, services: [], awards: [], isFavorite: false };
             }
             // verificamos si el awards no es null y si no esta en el array
             if (hotel.award_id && !acc[location_id].awards.find((award: any) => award.award_id === hotel.award_id)) {
@@ -289,6 +282,11 @@ export default class HotelDB implements FavHotelDBInterface {
             if (hotel.service_id && !acc[location_id].services.find((service: any) => service.service_id === hotel.service_id)) {
                 acc[location_id].services.push({ service_id: hotel.service_id, service_name: hotel.service_name, icon_name: hotel.icon_name });
             }
+
+            if (user_id && hotel.user_id === user_id) {
+                acc[location_id].isFavorite = true;
+            }
+
             return acc;
         }, {});
         return Object.values(groupedHotels);

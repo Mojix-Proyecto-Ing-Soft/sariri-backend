@@ -6,10 +6,10 @@ import HotelDB from '../dataAccess/HotelDB';
 export default class HotelService {
     private static hotelDB = HotelDB.getInstance();
 
-    public static filterHotelsInBounds(coords: Coords): Promise<any> {
+    public static filterHotelsInBounds(coords: Coords, user_id?: string): Promise<any> {
         const { bl_latitude, bl_longitude, tr_latitude, tr_longitude, max_places } = coords;
         return new Promise((resolve, reject) => {
-            this.hotelDB.getHotels().then((hotels) => {
+            this.hotelDB.getHotels(user_id).then((hotels) => {
                 const hotelsInBounds = hotels.filter((hotel: Hotel) => {
                     return this.inBounds({ lat: Number(hotel.hotel_lat), lng: Number(hotel.hotel_lng) }, bl_latitude, bl_longitude, tr_latitude, tr_longitude);
                 });

@@ -4,8 +4,8 @@ import { Coords } from '../models/coords';
 
 
 export const getHotelsByLatLng = (req: Request, res: Response) => {
-    const { bl_latitude, bl_longitude, tr_latitude, tr_longitude } = req.body;
-    const coords: Coords = { bl_latitude, bl_longitude, tr_latitude, tr_longitude };
+    const { bl_latitude, bl_longitude, tr_latitude, tr_longitude, max_places } = req.body;
+    const coords: Coords = { bl_latitude, bl_longitude, tr_latitude, tr_longitude, max_places };
     
     HotelService.filterHotelsInBounds(coords).then((result) => {
         res.status(200).send(result);

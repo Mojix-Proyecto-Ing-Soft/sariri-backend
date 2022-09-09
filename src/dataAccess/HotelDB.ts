@@ -244,9 +244,7 @@ export default class HotelDB implements FavHotelDBInterface {
                     if (error) {
                         reject(error);
                     }
-                    const hotelResult = results;
-                    const hotelss = this.bindAwardsAndServices(hotelResult as Array<any>);
-                    resolve(hotelss);
+                    resolve(this.bindAwardsAndServices(results as Array<any>));
                 }
             );
         });

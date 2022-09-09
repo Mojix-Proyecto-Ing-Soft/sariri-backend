@@ -279,7 +279,7 @@ export default class HotelDB implements FavHotelDBInterface {
             const { location_id, ...rest } = hotel;
             // verificamos si el hotel ya existe en el array
             if (!acc[location_id]) {
-                acc[location_id] = { ...rest, awards: [], services: [] };
+                acc[location_id] = { location_id, ...rest, services: [], awards: [] };
             }
             // verificamos si el awards no es null y si no esta en el array
             if (hotel.award_id && !acc[location_id].awards.find((award: any) => award.award_id === hotel.award_id)) {

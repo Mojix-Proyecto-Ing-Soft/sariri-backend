@@ -1,6 +1,6 @@
 import FavHotelDBInterface from '../models/FavHotelDBInterface'
 import sqlConnection from '../config/sqlConnection';
-import { Award, Hotel, Service } from '../models/hotelModels';
+import { Hotel } from '../models/hotelModels';
 
 
 //singleton DB
@@ -224,85 +224,75 @@ export default class HotelDB implements FavHotelDBInterface {
                         reject(error);
                     }
                     const hotelsResult = results as Array<Hotel>;
-                    this.getAwardsAndServices(hotelsResult).then((result) => {
-                        resolve(result);
-                    }).catch((error) => {
-                        reject(error);
-                    });
+                    //TODO
+                    resolve(hotelsResult);
+                    // this.getAwardsAndServices(hotelsResult).then((result) => {
+                    //     resolve(result);
+                    // }).catch((error) => {
+                    //     reject(error);
+                    // });
                 }
             );
         });
     }
-
-    public getHotelAwards(location_id: string): Promise<any> {
-        return new Promise((resolve, reject) => {
-            sqlConnection.query(
-                "SELECT a.award_id, a.display_name, a.badge_url FROM hotel_awards hw INNER JOIN awards a ON hw.award_id = a.award_id WHERE hw.location_id = ?",
-                [location_id],
-                (error, results, fields) => {
-                    if (error) {
-                        reject(error);
-                    }
-                    resolve(results);
-                }
-            );
-        });
-    }
-
-    public getHotelServices(location_id: string): Promise<any> {
-        return new Promise((resolve, reject) => {
-            sqlConnection.query(
-                "SELECT * FROM hotel_services hs INNER JOIN services s ON hs.service_id = s.service_id WHERE hs.location_id = ?",
-                [location_id],
-                (error, results, fields) => {
-                    if (error) {
-                        reject(error);
-                    }
-                    resolve(results);
-                }
-            );
-        });
-    }
-
 
     public getHotels(): Promise<any> {
         return new Promise((resolve, reject) => {
             sqlConnection.query(
-                "SELECT * FROM hotels",
+                "SELECT *, h.location_id FROM hotels h LEFT JOIN hotel_services hs ON h.location_id = hs.location_id LEFT JOIN services s ON hs.service_id = s.service_id LEFT JOIN hotel_awards ha ON h.location_id = ha.location_id LEFT JOIN awards a ON ha.award_id = a.award_id",
                 (error, results, fields) => {
                     if (error) {
                         reject(error);
                     }
-                    const hotelsResult = results as Array<Hotel>;
-                    this.getAwardsAndServices(hotelsResult).then((hotels) => {
-                        resolve(hotels);
-                    }).catch((error) => {
-                        reject(error);
-                    });
+                    const hotelResult = results;
+                    const hotelss = this.bindAwardsAndServices(hotelResult as Array<any>);
+                    resolve(hotelss);
                 }
             );
         });
     }
 
-    private getAwardsAndServices(hotels: Hotel[]): Promise<any> {
-        const hotelsResult: Hotel[] = [];
-        return new Promise((resolve, reject) => {
-            hotels.forEach((hotel) => {
-                const { location_id } = hotel;
-                this.getHotelAwards(location_id).then((awards: Award[]) => {
-                    hotel.awards = awards;
-                    this.getHotelServices(location_id).then((services: Service[]) => {
-                        hotel.services = services;
-                        hotelsResult.push(hotel);
-                        if (hotelsResult.length === hotels.length) {
-                            resolve(hotelsResult);
-                        }
-                    });
-                }).catch((error) => {
-                    reject(error);
-                });
-            });
-        });
-    }
+    // private groupServices(hotels: Array<Hotel>): Array<Hotel> {
+    //     const groupedHotels = hotels.reduce((acc: any, hotel: any) => {
+    //         const { location_id, ...rest } = hotel;
+    //         if (!acc[location_id]) {
+    //             acc[location_id] = { ...rest, services: [] };
+    //         }
+    //         acc[location_id].services.push({ service_id: hotel.service_id, service_name: hotel.service_name });
+    //         return acc;
+    //     }, {});
+    //     return Object.values(groupedHotels);
+    // }
 
+    // private groupAwards(hotels: Array<Hotel>): Array<Hotel> {
+    //     const groupedHotels = hotels.reduce((acc: any, hotel: any) => {
+    //         const { location_id, ...rest } = hotel;
+    //         if (!acc[location_id]) {
+    //             acc[location_id] = { ...rest, awards: [] };
+    //         }
+    //         acc[location_id].awards.push({ award_id: hotel.award_id, award_name: hotel.award_name });
+    //         return acc;
+    //     }, {});
+    //     return Object.values(groupedHotels);
+    // }
+
+    private bindAwardsAndServices(hotels: Array<any>): Array<any> {
+        const groupedHotels = hotels.reduce((acc: any, hotel: any) => {
+            const { location_id, ...rest } = hotel;
+            // verificamos si el hotel ya existe en el array
+            if (!acc[location_id]) {
+                acc[location_id] = { ...rest, awards: [], services: [] };
+            }
+            // verificamos si el awards no es null y si no esta en el array
+            if (hotel.award_id && !acc[location_id].awards.find((award: any) => award.award_id === hotel.award_id)) {
+                acc[location_id].awards.push({ award_id: hotel.award_id, display_name: hotel.display_name, badge_url: hotel.badge_url });
+            }
+            // verificamos si el service no es null y si no esta en el array
+            if (hotel.service_id && !acc[location_id].services.find((service: any) => service.service_id === hotel.service_id)) {
+                acc[location_id].services.push({ service_id: hotel.service_id, service_name: hotel.service_name, icon_name: hotel.icon_name });
+            }
+            return acc;
+        }, {});
+        return Object.values(groupedHotels);
+    }
 }

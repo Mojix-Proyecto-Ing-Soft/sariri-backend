@@ -4,3 +4,8 @@ export type Coords = {
     tr_latitude: number;
     tr_longitude: number;
 };
+
+export type PointCoords = {
+    lat: number;
+    lng: number;
+};

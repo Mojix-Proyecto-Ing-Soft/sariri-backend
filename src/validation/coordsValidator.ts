@@ -1,7 +1,5 @@
 import {
-    IsDefined,
-    IsLongitude,
-    IsLatitude,
+    IsDefined
   } from 'class-validator';
 import { Coords } from '../models/coords';
 
@@ -9,19 +7,15 @@ import { Coords } from '../models/coords';
 export class ValidCoords implements Coords {
     
     @IsDefined()
-    @IsLatitude()
     bl_latitude: number;
 
     @IsDefined()
-    @IsLongitude()
     bl_longitude: number;
 
     @IsDefined()
-    @IsLatitude()
     tr_latitude: number;
 
     @IsDefined()
-    @IsLongitude()
     tr_longitude: number;
 
     constructor(bl_latitude: number, bl_longitude: number, tr_latitude: number, tr_longitude: number) {

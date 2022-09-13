@@ -5,7 +5,7 @@ import {
     IsDefined,
     IsOptional
   } from 'class-validator';
-  import { NewUser, UpdateUser } from '../models/user';
+  import { NewUser, UpdateUser } from '../models/userModels';
 
   export class ValidUser implements NewUser {
     @IsDefined()

@@ -1,0 +1,33 @@
+_id: req_8e3f4503039d40098725ff8f4aa4d28b
+type: Request
+parentId: fld_aebe905c67f3436992e161d89dc3a161
+modified: 1663027156906
+created: 1663026467155
+url: "{{ _.baseUrl }}api/user/107308891021758819666"
+name: patchUserBadPhone
+description: ""
+method: PATCH
+body:
+  mimeType: application/json
+  text: |-
+    {
+    		"user_id": "3",
+    		"user_name": "Pruebases",
+    		"user_lastName": "Purebas",
+    		"user_phone": "+5916261644sdsd5",
+    		"user_email": "pruebas@gmail.com"
+    	}
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+    id: pair_9f3e7f844a534056a7e28fe7a7abfedd
+authentication: {}
+metaSortKey: -1663017381920.625
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

@@ -1,0 +1,21 @@
+_id: req_16f17c8f310c4d88bde610ecf5b47eb9
+type: Request
+parentId: fld_bd49a529a1014c25ab7ddafa29ba3ad9
+modified: 1663027175024
+created: 1663026467139
+url: "{{ _.baseUrl }}api/hotels-fav/user/104642251064225477976"
+name: getHotelFavs
+description: ""
+method: GET
+body: {}
+parameters: []
+headers: []
+authentication: {}
+metaSortKey: -1663017498429.4688
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

@@ -1,0 +1,21 @@
+_id: req_59bec9c81ed9473ba9bb0a72f583e51e
+type: Request
+parentId: fld_aebe905c67f3436992e161d89dc3a161
+modified: 1663027035177
+created: 1663026467160
+url: "{{ _.baseUrl }}api/user-exist/107308891021758819666seses"
+name: getUserExistBad
+description: ""
+method: GET
+body: {}
+parameters: []
+headers: []
+authentication: {}
+metaSortKey: -1663017382130
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

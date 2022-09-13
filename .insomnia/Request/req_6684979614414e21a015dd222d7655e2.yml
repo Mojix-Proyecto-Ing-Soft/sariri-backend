@@ -1,0 +1,21 @@
+_id: req_6684979614414e21a015dd222d7655e2
+type: Request
+parentId: fld_aebe905c67f3436992e161d89dc3a161
+modified: 1663027016537
+created: 1663026467158
+url: "{{ _.baseUrl }}api/user/6969"
+name: getUserBadId
+description: ""
+method: GET
+body: {}
+parameters: []
+headers: []
+authentication: {}
+metaSortKey: -1663017382167.5
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

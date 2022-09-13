@@ -1,0 +1,33 @@
+_id: req_41b9d6531437466ba673cb059a1dae73
+type: Request
+parentId: fld_bd49a529a1014c25ab7ddafa29ba3ad9
+modified: 1663027180899
+created: 1663026467144
+url: "{{ _.baseUrl }}api/user/107308891021758819666"
+name: postUser
+description: ""
+method: POST
+body:
+  mimeType: application/json
+  text: |-
+    {
+    		"user_id": "3",
+    		"user_name": "Prueba",
+    		"user_lastName": "Purebas",
+    		"user_phone": "+59162616445",
+    		"user_email": "pruebas@gmail.com"
+    	}
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+    id: pair_da3f9a71abc04452a0ffe9f3395c0b6c
+authentication: {}
+metaSortKey: -1663017498423.2188
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

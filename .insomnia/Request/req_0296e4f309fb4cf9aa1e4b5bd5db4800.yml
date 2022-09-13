@@ -1,0 +1,21 @@
+_id: req_0296e4f309fb4cf9aa1e4b5bd5db4800
+type: Request
+parentId: fld_bd49a529a1014c25ab7ddafa29ba3ad9
+modified: 1663027167078
+created: 1663026467147
+url: "{{ _.baseUrl }}api/user-exist/107308891021758819666"
+name: getUserExist
+description: ""
+method: GET
+body: {}
+parameters: []
+headers: []
+authentication: {}
+metaSortKey: -1663017498441.9688
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

@@ -1,0 +1,14 @@
+_id: env_b720dcc204464ee8b5822be27a39cd2b
+type: Environment
+parentId: env_4d503d3a11e6adab517cdacc95e733ee70b74deb
+modified: 1663027219338
+created: 1663026774698
+name: PROD
+data:
+  baseUrl: http://localhost:4000/
+dataPropertyOrder:
+  "&":
+    - baseUrl
+color: "#0ed82f"
+isPrivate: false
+metaSortKey: 1663026774698

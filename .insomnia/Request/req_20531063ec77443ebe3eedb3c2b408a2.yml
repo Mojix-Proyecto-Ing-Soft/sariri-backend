@@ -1,0 +1,41 @@
+_id: req_20531063ec77443ebe3eedb3c2b408a2
+type: Request
+parentId: fld_bd49a529a1014c25ab7ddafa29ba3ad9
+modified: 1663027187493
+created: 1663026467140
+url: "{{ _.baseUrl }}api/hotel-fav/user/104642251064225477976"
+name: postHotelFavs
+description: ""
+method: POST
+body:
+  mimeType: application/json
+  text: >-
+    {
+    		"location_id": "306505",
+    		"hotel_name": "Ritz Apart Hotel",
+    		"hotel_lat": "-16.509342",
+    		"hotel_lng": "-68.12463",
+    		"photo_url_large": "https://media-cdn.tripadvisor.com/media/photo-s/15/9f/53/0e/ritz-apart-hotel.jpg",
+    	"photo_url_original":"https://media-cdn.tripadvisor.com/media/photo-o/15/9f/53/0e/ritz-apart-hotel.jpg",
+    		"hotel_price": "$95 - $118",
+    		"hotel_rating": "4,5",
+    	"hotel_address": "La Paz, La Paz Department",
+    	"num_reviews": "486",
+    "hotel_ranking": "#3 Best Value of 301 places to stay in La Paz",
+    	"contact_number": "+591 2 2433131",
+    	"price_level": "$$"
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+    id: pair_1ca622745ae949bdb33b3182b3a7e254
+authentication: {}
+metaSortKey: -1663017498420.0938
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

@@ -1,0 +1,33 @@
+_id: req_ead8061847c0425cbf661e2099773480
+type: Request
+parentId: fld_bd49a529a1014c25ab7ddafa29ba3ad9
+modified: 1663027205134
+created: 1663026467149
+url: "{{ _.baseUrl }}api/user/107308891021758819666"
+name: patchUserLastName
+description: ""
+method: PATCH
+body:
+  mimeType: application/json
+  text: |-
+    {
+    		"user_id": "3",
+    		"user_name": "Pruebases",
+    		"user_lastName": "Purebas23",
+    		"user_phone": "+59162616445",
+    		"user_email": "pruebas@gmail.com"
+    	}
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+    id: pair_9f3e7f844a534056a7e28fe7a7abfedd
+authentication: {}
+metaSortKey: -1663017498391.9688
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

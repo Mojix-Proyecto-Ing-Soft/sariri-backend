@@ -28,6 +28,8 @@ Para poder importarlo primero debes tener una coleccion y darle click al boton d
 
 Se te creara una coleccion llamada TestDbMojix, en la cual se encuentran todas las pruebas de la DB de Mojix.
 
+Al entrar a la carpeta debes darle click a `DEBUG` que esta en la parte central sueprior de la pantalla para poder ver las carpetas y poder ejecutar las pruebas.
+
 Dentro de este hay una carpeta llamada `Mojix` que contiene todas las pruebas de la DB del proyecto donde tiene las siguientes carpetas:
 
 - `TrainersProd`: Contiene las pruebas con el link deployado y funcional.
